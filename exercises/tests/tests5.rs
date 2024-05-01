@@ -22,7 +22,6 @@
 // Execute `rustlings hint tests5` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
 
 /// # Safety
 ///
@@ -32,7 +31,10 @@ unsafe fn modify_by_address(address: usize) {
     // code's behavior and the contract of this function. You may use the
     // comment of the test below as your format reference.
     unsafe {
-        todo!("Your code goes here")
+        // 安全性：我们使用 `as_mut` 方法获取指向 `address` 指向的值的可变引用。
+        // 只有当 `address` 是指向 `u32` 值的有效指针时，这才是安全的。
+        let value = &mut *(address as *mut u32);
+        *value = 0xAABBCCDD; // 将值修改为 0xAABBCCDD
     }
 }
 

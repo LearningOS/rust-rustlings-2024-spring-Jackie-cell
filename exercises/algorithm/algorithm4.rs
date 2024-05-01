@@ -50,13 +50,40 @@ where
 
     // Insert a value into the BST
     fn insert(&mut self, value: T) {
-        //TODO
+        // 如果根节点为空，则直接将值作为根节点插入
+        if self.root.is_none() {
+            self.root = Some(Box::new(TreeNode::new(value)));
+            return;
+        }
+
+        // 否则，调用递归插入方法
+        Self::insert_recursive(&mut self.root, value);
+    }
+
+    // 递归插入方法
+    fn insert_recursive(node: &mut Option<Box<TreeNode<T>>>, value: T) {
+        // 如果节点为空，将值插入该位置
+        if let Some(ref mut current) = node {
+            if value < current.value {
+                BinarySearchTree::insert_recursive(&mut current.left, value);
+            } else if value > current.value {
+                BinarySearchTree::insert_recursive(&mut current.right, value);
+            }
+        } else {
+            // 如果节点已经存在相同值，则直接返回
+            return;
+        }
     }
 
     // Search for a value in the BST
     fn search(&self, value: T) -> bool {
         //TODO
-        true
+        // if let Some(root) = &self.root {
+        //     root.search(value)
+        // } else {
+        //     false
+        // }
+        self.root.as_ref().map_or(false, |root| root.search(value))
     }
 }
 
@@ -67,6 +94,36 @@ where
     // Insert a node into the tree
     fn insert(&mut self, value: T) {
         //TODO
+        if value <= self.value {
+            if let Some(ref mut left) = self.left {
+                left.insert(value);
+            } else {
+                self.left = Some(Box::new(TreeNode::new(value)));
+            }
+        } else {
+            if let Some(ref mut right) = self.right {
+                right.insert(value);
+            } else {
+                self.right = Some(Box::new(TreeNode::new(value)));
+            }
+        }
+    }
+    fn search(&self, value: T) -> bool {
+        if value == self.value {
+            true
+        } else if value < self.value {
+            if let Some(ref left) = self.left {
+                left.search(value)
+            } else {
+                false
+            }
+        } else {
+            if let Some(ref right) = self.right {
+                right.search(value)
+            } else {
+                false
+            }
+        }
     }
 }
 
