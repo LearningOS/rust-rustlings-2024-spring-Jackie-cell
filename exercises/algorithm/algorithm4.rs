@@ -3,7 +3,6 @@
 	This problem requires you to implement a basic interface for a binary tree
 */
 
-//I AM NOT DONE
 use std::cmp::Ordering;
 use std::fmt::Debug;
 
@@ -50,14 +49,17 @@ where
 
     // Insert a value into the BST
     fn insert(&mut self, value: T) {
-        // 如果根节点为空，则直接将值作为根节点插入
-        if self.root.is_none() {
-            self.root = Some(Box::new(TreeNode::new(value)));
-            return;
+        // // 如果根节点为空，则直接将值作为根节点插入
+        // if self.root.is_none() {
+        //     self.root = Some(Box::new(TreeNode::new(value)));
+        //     return;
+        // }
+        // // 否则，调用递归插入方法
+        // Self::insert_recursive(&mut self.root, value);
+        match &mut self.root {
+            Some(root) => root.insert(value),
+            None => self.root = Some(Box::new(TreeNode::new(value))),
         }
-
-        // 否则，调用递归插入方法
-        Self::insert_recursive(&mut self.root, value);
     }
 
     // 递归插入方法
@@ -94,18 +96,35 @@ where
     // Insert a node into the tree
     fn insert(&mut self, value: T) {
         //TODO
-        if value <= self.value {
-            if let Some(ref mut left) = self.left {
-                left.insert(value);
-            } else {
-                self.left = Some(Box::new(TreeNode::new(value)));
+        // if value <= self.value {
+        //     if let Some(ref mut left) = self.left {
+        //         left.insert(value);
+        //     } else {
+        //         self.left = Some(Box::new(TreeNode::new(value)));
+        //     }
+        // } else {
+        //     if let Some(ref mut right) = self.right {
+        //         right.insert(value);
+        //     } else {
+        //         self.right = Some(Box::new(TreeNode::new(value)));
+        //     }
+        // }
+        match value.cmp(&self.value) {
+            Ordering::Less => {
+                if let Some(left) = &mut self.left {
+                    left.insert(value);
+                } else {
+                    self.left = Some(Box::new(TreeNode::new(value)));
+                }
             }
-        } else {
-            if let Some(ref mut right) = self.right {
-                right.insert(value);
-            } else {
-                self.right = Some(Box::new(TreeNode::new(value)));
+            Ordering::Greater => {
+                if let Some(right) = &mut self.right {
+                    right.insert(value);
+                } else {
+                    self.right = Some(Box::new(TreeNode::new(value)));
+                }
             }
+            _ => {}
         }
     }
     fn search(&self, value: T) -> bool {
